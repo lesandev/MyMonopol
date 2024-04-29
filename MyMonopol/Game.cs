@@ -23,7 +23,7 @@ namespace MyMonopol
 
         public Game()
         {
-            players = new Player[2];
+            players = new Player[4];
         }
         public Game(int howMany)
         {
@@ -76,9 +76,13 @@ namespace MyMonopol
 
         public void InitializePlayers()
         {
-            players[0] = new Player(new Point(0, 0), 1, 0);
-            players[1] = new Player(new Point(0, 0), 2, 0);
-        //    players[2] = new Player(new Point(0, 0), 3, 0);
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i] = new Player(new Point(0, 0), i+1, 0);
+            }   
+            //players[0] = new Player(new Point(0, 0), 1, 0);
+            //players[1] = new Player(new Point(0, 0), 2, 0);
+            //players[2] = new Player(new Point(0, 0), 3, 0);
         }
         public Player[] GetPlayers()
         {
@@ -128,7 +132,8 @@ namespace MyMonopol
                 return;
             }
             //    DoYouWannaEndGame();
-            Player currentPlayer = players[currentPlayerIndex];
+            // Player currentPlayer = players[currentPlayerIndex];
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
 
         }
 
@@ -217,12 +222,12 @@ namespace MyMonopol
         }
         public void createPlayers(Graphics e, int tileSize)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < players.Length; i++)
             {
                 players[i].CreatePlayer(e, tileSize, i);
             }
         }
-        public int showPlayersData(Size ClientSize, PaintEventArgs e)
+        public void showPlayersData(Size ClientSize, PaintEventArgs e)
         {
             int playerInfoWidth = ClientSize.Width / 4;
 
@@ -271,14 +276,14 @@ namespace MyMonopol
 
                 offsetY += 150; // Increase the offset for the next player
             }
-            //if(currentPlayerIndex == 3) 
+            //if (currentPlayerIndex == 2)
             //{
             //    currentPlayerIndex = 0;
             //}
             //currentPlayerIndex = currentPlayerIndex + 1;
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
+            //currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
 
-            return currentPlayerIndex;
+            //return currentPlayerIndex;
         }
     }
 

@@ -45,7 +45,9 @@ namespace MyMonopol
             Board.CreateTiles(e.Graphics, ClientSize);
 
             tileSize = Math.Min(ClientSize.Width / 10, ClientSize.Height / 10);
+
             game.showPlayersData(ClientSize, e);
+
             game.createPlayers(e.Graphics, tileSize);
             //Player[] players = game.GetPlayers();
             //for (int i = 0; i < 2; i++)
