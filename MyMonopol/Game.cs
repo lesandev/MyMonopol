@@ -76,7 +76,7 @@ namespace MyMonopol
 
         public void InitializePlayers()
         {
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < playersAmount; i++)
             {
                 players[i] = new Player(new Point(0, 0), i+1, 0);
             }   
