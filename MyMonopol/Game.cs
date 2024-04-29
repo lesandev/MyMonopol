@@ -83,7 +83,7 @@ namespace MyMonopol
             if (currentPlayer.Position.Y == 0 && currentPlayer.Position.X == 9)
             {
                 MessageBox.Show("you're at jail! you miss one turn");
-                currentPlayer.AddPunishment(1);
+                currentPlayer.AddPunishment(2);
                 noPunishment[currentPlayerIndex] = false;
             }
             else if (currentPlayer.Position.Y == 9 && currentPlayer.Position.X == 0)
@@ -91,7 +91,7 @@ namespace MyMonopol
                 MessageBox.Show("you're going to jail! you miss one turn");
                 newPosition = new Point(9, 0);
                 currentPlayer.Move(newPosition);
-                currentPlayer.AddPunishment(1);
+                currentPlayer.AddPunishment(2);
                 noPunishment[currentPlayerIndex] = false;
             }
 
@@ -127,15 +127,16 @@ namespace MyMonopol
 
         public void RollAndPLay(Size ClientSize)
         {
-
-            if (players[currentPlayerIndex].GetPunishment() > 0)
+            for(int i = 0;i < players.Length; i++)
             {
-                currentPlayerIndex++;
-                if (currentPlayerIndex == players.Length)
+                if (players[currentPlayerIndex].GetPunishment() > 0)
                 {
-                    currentPlayerIndex = 0;
+                    players[currentPlayerIndex].RemovePunishment(1);
+                    currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
                 }
             }
+
+
             move = 12;
 
             MessageBox.Show($"Player {currentPlayerIndex + 1} moving " + move.ToString() + " slots");
@@ -163,8 +164,13 @@ namespace MyMonopol
 
 
      
-            bool ifOwned = CheckIfCityOwned(tile);
-            if (!ifOwned && noPunishment[currentPlayerIndex] == true)
+            bool ifOwnedByItsOwner = CheckIfCityOwnedByItsOwner(tile);
+            bool OtherPlayerOwner = false;
+            if (!ifOwnedByItsOwner)
+            {
+                OtherPlayerOwner = IfOwnedByOtherPlayer(tile);
+            }
+            if (!ifOwnedByItsOwner && noPunishment[currentPlayerIndex] == true && !OtherPlayerOwner)
             {
                 DoYouWannaOwn(tile);
             }
@@ -175,6 +181,12 @@ namespace MyMonopol
             }
             //    DoYouWannaEndGame();
             // Player currentPlayer = players[currentPlayerIndex];
+            if (players[currentPlayerIndex].GetPunishment() > 0)
+            {
+                players[currentPlayerIndex].RemovePunishment(1);
+                noPunishment[currentPlayerIndex] = false;
+            }
+           
             currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
 
         }
@@ -190,84 +202,36 @@ namespace MyMonopol
 
         }
         //    to check all functions to be private/public
-        private bool CheckIfCityOwned(Tile tile)
+        private bool CheckIfCityOwnedByItsOwner(Tile tile)
         {
             if (tile != null)
             {
-                for (int i = 0; i < gameOwnedCities.Length; i++)
+                if (players[currentPlayerIndex].IsPlayerOwnerOfCity(tile))
                 {
-                    if (tile == gameOwnedCities[i])
-                    {
-
-                        if (IfRealyOwned(tile) == true )
-                        {
-                            return true;
-                        }
-                    }
-
+                    MessageBox.Show($"you stepped into your property!");
+                    return true;
                 }
             }
+
             return false;
 
         }
-        private bool IfRealyOwned(Tile tile)
+        private bool IfOwnedByOtherPlayer(Tile tile)
         {
             for (int i = 0; i < players.Length; i++)
             {
-                Player player = players[i];
-                Tile[] ownedTiles = player.GetOwnedCityPlayer();
-                for (int k = 0; k < player.GetOwnedCityPlayer().Length; k++)
+                if (i != currentPlayerIndex && players[i].IsPlayerOwnerOfCity(tile))
                 {
-                    if (tile == ownedTiles[k])
-                    {
-                        if (!players[currentPlayerIndex].IsPlayerOwnerOfCity(tile))
-                        {
-                            MessageBox.Show($"you stepped into your property!");
-                            return true;
-                        }
-                        else
-                        {
-                            MessageBox.Show($"Player {players[currentPlayerIndex].GetPlayerName()} landed on a property owned by {player.GetPlayerName()}");
-                            double rent = tile.GetPrice() * 0.2;
-                            players[currentPlayerIndex].SetAmountOfMoney(-rent);
-                            player.SetAmountOfMoney(rent);
-                            return true;
-                        }
-
-
-
-                    }
+                    MessageBox.Show($"Player {players[currentPlayerIndex].GetPlayerName()} landed on a property owned by {players[i].GetPlayerName()}");
+                    double rent = tile.GetPrice() * 0.2;
+                    players[currentPlayerIndex].SetAmountOfMoney(-rent);
+                    players[i].SetAmountOfMoney(rent);
+                    return true;
                 }
+
             }
             return false;
         }
-        //private bool ifRealyOwned(Tile tile)
-        //{
-        //    for (int j = 0; j < players.Length; j++)
-        //    {
-        //        for (int k = 0; k < players[j].GetOwnedCityPlayer().Length; k++)
-        //        {
-        //            if (tile == players[j].GetOwnedCityPlayer()[k])
-        //            {
-        //                MessageBox.Show($"whats the problem?");
-        //                if (players[j] != players[currentPlayerIndex])
-        //                {
-
-        //                    MessageBox.Show($"you acheived to your house");
-        //                    return true;
-        //                }
-
-        //                    MessageBox.Show($"Player {players[currentPlayerIndex].GetPlayerName()} stepped at a place that belongs to {players[j].GetPlayerName()}");
-        //                    double penaltyPrice = tile.GetPrice() * 0.2;
-        //                    players[currentPlayerIndex].SetAmountOfMoney(-1 * penaltyPrice);
-        //                    players[j].SetAmountOfMoney(penaltyPrice);                 
-        //                    return true;
-        //            }
-        //        }
-        //    }
-        //    return false;
-        //}
-
         private void DoYouWannaOwn(Tile tile)
         {
             DialogResult result = MessageBox.Show("Do you approve?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -293,18 +257,6 @@ namespace MyMonopol
                 }
 
                 players[currentPlayerIndex].SetHowManyOwnedCities(players[currentPlayerIndex].GetAmountOfOwnedCities() + 1);
-
-                //if (players[currentPlayerIndex].GetOwnedCityPlayer().Length == players[currentPlayerIndex].GetHowManyOwnedCities() + 1)
-                //{
-                //    string[] tempOwnedCityPlayer = new string[players[currentPlayerIndex].GetOwnedCityPlayer().Length + 10];
-                //    for (int i = 0; i < tempOwnedCityPlayer.Length; i++)
-                //    {
-                //        //tempOwnedCityPlayer[i] = players[currentPlayerIndex].GetOwnedCityPlayer()[i];
-                //    }
-                //    tempOwnedCityPlayer[players[currentPlayerIndex].GetOwnedCityPlayer().Length + 1] = tile.ToString();
-                //    players[currentPlayerIndex].SetOwnedCityPlayers(tempOwnedCityPlayer)
-                //        ;
-                //}
 
                 players[currentPlayerIndex].GetOwnedCityPlayer()[players[currentPlayerIndex].GetAmountOfOwnedCities()] = tile;
 
@@ -344,7 +296,7 @@ namespace MyMonopol
                 e.Graphics.DrawString($"Player {i + 1} Name: ", font, brush, playerInfoX + 10, playerInfoY + offsetY);
                 e.Graphics.DrawString(playerName, font, brush, playerInfoX + 10, playerInfoY + offsetY + 20);
 
-                offsetY += 40;
+                offsetY += 35;
                 //DRAW AMOUNT OF PLAYERS PUNISHMENT
                 int punishmentPlayer = players[i].GetPunishment();
                 e.Graphics.DrawString($"Player {i + 1} Amount Of Punishment: ", font, brush, playerInfoX + 10, playerInfoY + offsetY);
@@ -370,7 +322,7 @@ namespace MyMonopol
                 }
 
 
-                offsetY += 150; // Increase the offset for the next player
+                offsetY += 130; // Increase the offset for the next player
             }
             //if (currentPlayerIndex == 2)
             //{
