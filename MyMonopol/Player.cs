@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -15,30 +16,40 @@ namespace MyMonopol
         private Tile[] currentPlayerOwnedCity = new Tile[10];
         private int playerLandedIndex = 0;
         private int gameAmountOfOwnedCities = 0;
-        private int[] punishment;
-
+        private int punishment;
+        public Point Position { get; set; }
 
         public Player(Point position, int playerName, int playerLandedIndex)
         {
             this.Position = position;
             this.playerName = playerName;
             this.playerLandedIndex = playerLandedIndex;
+            punishment = 0;
             //    ownedCity = new string[0];
         }
-        public Point Position { get; set; }
+
 
         public Player(int playerName)
         {
             this.playerName = playerName;
+            punishment = 0;
         }
         public double GetAmountOfMoney()
         {
             return amountOfMoney;
         }
-        //public int GetPlayerHowManyIndex()
-        //{
-
-        //}
+        public void AddPunishment(int add)
+        {
+            punishment += add;
+        }
+        public void RemovePunishment(int remove)
+        {
+            punishment -= remove;
+        }
+        public int GetPlayerHowManyIndex()
+        {
+            return punishment;
+        }
         public void SetHowManyOwnedCities(int howManyOwnedCities)
         {
             gameAmountOfOwnedCities = howManyOwnedCities;
@@ -66,14 +77,17 @@ namespace MyMonopol
         {
             //if(currentPlayerOwnedCity.Length > this.currentPlayerOwnedCity.Length)
             //{ 
-             
+
 
             //    Tile[] tempOwnedCity = new Tile[currentPlayerOwnedCity.Length + 1];      
 
             //}
             currentPlayerOwnedCity = OwnedCity;
         }
-
+        public int GetPunishment()
+        {
+            return punishment;
+        }
         public void Move(Point newPosition)
         {
             Position = newPosition;
@@ -94,8 +108,8 @@ namespace MyMonopol
 
         public void CreatePlayer(Graphics g, int tileSize, int counter)
         {
-            int playerX = Position.X * tileSize + tileSize / 2 - 15 * counter;
-            int playerY = Position.Y * tileSize + tileSize / 2 - 15 * counter;
+            int playerX = Position.X * tileSize + tileSize / 2 - 10 * counter;
+            int playerY = Position.Y * tileSize + tileSize / 2 - 10 * counter;
 
             if (counter == 0)
             {
@@ -118,12 +132,24 @@ namespace MyMonopol
             }
             if (counter == 3)
             {
-                g.FillEllipse(Brushes.Aqua, playerX, playerY, 22, 22);
+                g.FillEllipse(Brushes.Brown, playerX, playerY, 22, 22);
                 g.DrawString((counter + 1).ToString(), SystemFonts.DefaultFont, Brushes.White, playerX + 6, playerY + 6);
 
             }
-
         }
+        public bool IsPlayerOwnerOfCity(Tile city)
+        {
+            for (int i = 0; i < currentPlayerOwnedCity.Length; i++)
+            {
+                if (currentPlayerOwnedCity[i] == city)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
+
 
