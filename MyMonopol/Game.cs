@@ -83,14 +83,13 @@ namespace MyMonopol
             if (currentPlayer.Position.Y == 0 && currentPlayer.Position.X == 9)
             {
                 MessageBox.Show("you're at jail! you miss one turn");
+                newPosition = new Point(0, 9);
+                currentPlayer.Move(newPosition);
                 currentPlayer.AddPunishment(2);
                 noPunishment[currentPlayerIndex] = false;
             }
             else if (currentPlayer.Position.Y == 9 && currentPlayer.Position.X == 0)
             {
-                MessageBox.Show("you're going to jail! you miss one turn");
-                newPosition = new Point(9, 0);
-                currentPlayer.Move(newPosition);
                 currentPlayer.AddPunishment(2);
                 noPunishment[currentPlayerIndex] = false;
             }
@@ -137,7 +136,7 @@ namespace MyMonopol
             }
 
 
-            move = 12;
+            move = 18;
 
             MessageBox.Show($"Player {currentPlayerIndex + 1} moving " + move.ToString() + " slots");
             MoveCurrentPlayer(move, currentPlayerIndex, ClientSize);
@@ -163,14 +162,14 @@ namespace MyMonopol
             }
 
 
-     
+            bool ifPriceIsZero = tilePriceZero(tile);
             bool ifOwnedByItsOwner = CheckIfCityOwnedByItsOwner(tile);
             bool OtherPlayerOwner = false;
             if (!ifOwnedByItsOwner)
             {
                 OtherPlayerOwner = IfOwnedByOtherPlayer(tile);
             }
-            if (!ifOwnedByItsOwner && noPunishment[currentPlayerIndex] == true && !OtherPlayerOwner)
+            if (!ifOwnedByItsOwner && noPunishment[currentPlayerIndex] == true && !OtherPlayerOwner && !ifPriceIsZero)
             {
                 DoYouWannaOwn(tile);
             }
@@ -190,6 +189,12 @@ namespace MyMonopol
             currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
 
         }
+
+        private bool tilePriceZero(Tile tile)
+        {
+            if( tile.GetPrice() == 0) { return true; }
+            return false;
+         }
 
         private void EndGameDueToMoney(int currentPlayerIndex, Monopoly form)
         {
@@ -285,7 +290,7 @@ namespace MyMonopol
             // Define font and brush for drawing text
             Font font = SystemFonts.DefaultFont;
             Brush brush = Brushes.Black;
-
+            Font boldFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
             int offsetY = 10;
 
             // Draw player data for each player
@@ -293,23 +298,23 @@ namespace MyMonopol
             {
                 // Draw player name
                 string playerName = players[i].GetPlayerName().ToString();
-                e.Graphics.DrawString($"Player {i + 1} Name: ", font, brush, playerInfoX + 10, playerInfoY + offsetY);
+                e.Graphics.DrawString($"Player {i + 1} Name: ", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY);
                 e.Graphics.DrawString(playerName, font, brush, playerInfoX + 10, playerInfoY + offsetY + 20);
 
                 offsetY += 35;
                 //DRAW AMOUNT OF PLAYERS PUNISHMENT
                 int punishmentPlayer = players[i].GetPunishment();
-                e.Graphics.DrawString($"Player {i + 1} Amount Of Punishment: ", font, brush, playerInfoX + 10, playerInfoY + offsetY);
+                e.Graphics.DrawString($"Player {i + 1} Amount Of Punishment: ", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY);
                 e.Graphics.DrawString(punishmentPlayer.ToString(), font, brush, playerInfoX + 10, playerInfoY + offsetY + 20);
                 // Draw player money amount
                 double playerMoney = players[i].GetAmountOfMoney();
-                e.Graphics.DrawString($"Player {i + 1} Money:", font, brush, playerInfoX + 10, playerInfoY + offsetY + 50);
+                e.Graphics.DrawString($"Player {i + 1} Money:", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY + 50);
                 e.Graphics.DrawString(playerMoney.ToString(), font, brush, playerInfoX + 10, playerInfoY + offsetY + 70);
 
                 //     Draw owned cities
 
                 Tile[] OwnedCities = players[i].GetOwnedCityPlayer();
-                e.Graphics.DrawString($"Player {i + 1} Owned Cities:", font, brush, playerInfoX + 10, playerInfoY + offsetY + 100);
+                e.Graphics.DrawString($"Player {i + 1} Owned Cities:", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY + 100);
                 for (int j = 0; j < OwnedCities.Length; j++)
                 {
                     if (OwnedCities[j] != null)
