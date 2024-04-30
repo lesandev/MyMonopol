@@ -21,7 +21,7 @@ namespace MyMonopol
         private int ownedCitiesHowMany = 0;
         private Button button1_Click;
         private bool[] noPunishment;
-
+        
 
         public Game()
         {
