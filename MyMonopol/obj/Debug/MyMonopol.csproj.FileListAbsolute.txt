@@ -32,7 +32,6 @@ C:\Users\lea\Documents\MyMonopol\MyMonopol\bin\Debug\MyMonopol.exe.config
 C:\Users\lea\Documents\MyMonopol\MyMonopol\bin\Debug\MyMonopol.exe
 C:\Users\lea\Documents\MyMonopol\MyMonopol\bin\Debug\MyMonopol.pdb
 C:\Users\lea\Documents\MyMonopol\MyMonopol\obj\Debug\MyMonopol.csproj.AssemblyReference.cache
-C:\Users\lea\Documents\MyMonopol\MyMonopol\obj\Debug\MyMonopol.Monopoly.resources
 C:\Users\lea\Documents\MyMonopol\MyMonopol\obj\Debug\MyMonopol.Properties.Resources.resources
 C:\Users\lea\Documents\MyMonopol\MyMonopol\obj\Debug\MyMonopol.csproj.GenerateResource.cache
 C:\Users\lea\Documents\MyMonopol\MyMonopol\obj\Debug\MyMonopol.csproj.CoreCompileInputs.cache
@@ -48,3 +47,4 @@ C:\Users\s_a19\Desktop\MyMonopol\MyMonopol\obj\Debug\MyMonopol.csproj.GenerateRe
 C:\Users\s_a19\Desktop\MyMonopol\MyMonopol\obj\Debug\MyMonopol.csproj.CoreCompileInputs.cache
 C:\Users\s_a19\Desktop\MyMonopol\MyMonopol\obj\Debug\MyMonopol.exe
 C:\Users\s_a19\Desktop\MyMonopol\MyMonopol\obj\Debug\MyMonopol.pdb
+C:\Users\lea\Documents\MyMonopol\MyMonopol\obj\Debug\MyMonopoly.Monopoly.resources

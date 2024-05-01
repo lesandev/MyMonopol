@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MyMonopol
+namespace MyMonopoly
 {
     public class Game
     {
@@ -21,19 +21,7 @@ namespace MyMonopol
         private int ownedCitiesHowMany = 0;
         private Button button1_Click;
         private bool[] noPunishment;
-        
 
-        public Game()
-        {
-
-            players = new Player[4];
-
-            noPunishment = new bool[4];
-            for (int i = 0; i < noPunishment.Length; i++)
-            {
-                noPunishment[i] = true;
-            }
-        }
         public Game(int howMany)
         {
             players = new Player[howMany];
@@ -43,6 +31,11 @@ namespace MyMonopol
                 noPunishment[i] = true;
             }
         }
+        public void AddPlayers(int playerAmount)
+        {
+            Player[] finalPlayers = new Player[playerAmount];
+
+        }
         public void MoveCurrentPlayer(int move, int currentPlayerIndex, Size ClientSize)
         {
             Player currentPlayer = players[currentPlayerIndex];
@@ -51,36 +44,36 @@ namespace MyMonopol
             //   Board.CreateTiles(g, ClientSize);
             for (int i = 0; i < move; i++)
             {
-                if (currentPlayer.Position.Y == 0 && currentPlayer.Position.X < 9)
+                if (currentPlayer.GetPosition().Y == 0 && currentPlayer.GetPosition().X < 9)
                 {
-                    newPosition = new Point(currentPlayer.Position.X + 1, currentPlayer.Position.Y);
+                    newPosition = new Point(currentPlayer.GetPosition().X + 1, currentPlayer.GetPosition().Y);
                     currentPlayer.Move(newPosition);
                     //          AnimatePlayerMove(currentPlayer, newPosition, tileSize, g);
                 }
-                else if (currentPlayer.Position.Y < 9 && currentPlayer.Position.X == 9)
+                else if (currentPlayer.GetPosition().Y < 9 && currentPlayer.GetPosition().X == 9)
                 {
-                    newPosition = new Point(currentPlayer.Position.X, currentPlayer.Position.Y + 1);
+                    newPosition = new Point(currentPlayer.GetPosition().X, currentPlayer.GetPosition().Y + 1);
                     currentPlayer.Move(newPosition);
                     //           AnimatePlayerMove(currentPlayer, newPosition, tileSize, g);
 
                 }
-                else if (currentPlayer.Position.Y == 9 && currentPlayer.Position.X > 0)
+                else if (currentPlayer.GetPosition().Y == 9 && currentPlayer.GetPosition().X > 0)
                 {
-                    newPosition = new Point(currentPlayer.Position.X - 1, currentPlayer.Position.Y);
+                    newPosition = new Point(currentPlayer.GetPosition().X - 1, currentPlayer.GetPosition().Y);
                     currentPlayer.Move(newPosition);
                     ///         AnimatePlayerMove(currentPlayer, newPosition, tileSize, g);
 
                 }
                 else
                 {
-                    newPosition = new Point(currentPlayer.Position.X, currentPlayer.Position.Y - 1);
+                    newPosition = new Point(currentPlayer.GetPosition().X, currentPlayer.GetPosition().Y - 1);
                     currentPlayer.Move(newPosition);
                     //        AnimatePlayerMove(currentPlayer, newPosition, tileSize, g);
                 }
             }
 
 
-            if (currentPlayer.Position.Y == 0 && currentPlayer.Position.X == 9)
+            if (currentPlayer.GetPosition().Y == 0 && currentPlayer.GetPosition().X == 9)
             {
                 MessageBox.Show("you're at jail! you miss one turn");
                 newPosition = new Point(0, 9);
@@ -88,18 +81,11 @@ namespace MyMonopol
                 currentPlayer.AddPunishment(2);
                 noPunishment[currentPlayerIndex] = false;
             }
-            else if (currentPlayer.Position.Y == 9 && currentPlayer.Position.X == 0)
+            else if (currentPlayer.GetPosition().Y == 9 && currentPlayer.GetPosition().X == 0)
             {
                 currentPlayer.AddPunishment(2);
                 noPunishment[currentPlayerIndex] = false;
             }
-
-
-            //currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
-            //return currentPlayerIndex;
-
-
-
         }
 
         public void InitializePlayers()
@@ -136,7 +122,7 @@ namespace MyMonopol
             }
 
 
-            move = 18;
+            move = 4;
 
             MessageBox.Show($"Player {currentPlayerIndex + 1} moving " + move.ToString() + " slots");
             MoveCurrentPlayer(move, currentPlayerIndex, ClientSize);
@@ -155,7 +141,7 @@ namespace MyMonopol
             players[currentPlayerIndex].PlayerLandedIndex = playerPlaceIndex;
             Tile tile = currentTile.FindTileByIndex(playerPlaceIndex);
 
-            string cityName = tile.getName();
+            string cityName = tile.GetName();
             if (players[currentPlayerIndex].GetPunishment() == 0)
             {
                 MessageBox.Show($" Index = {playerPlaceIndex} City =  {cityName}");
@@ -173,7 +159,7 @@ namespace MyMonopol
             {
                 DoYouWannaOwn(tile);
             }
-            if (players[currentPlayerIndex].GetAmountOfMoney() < 10)
+            if (players[currentPlayerIndex].GetAmountOfMoney() < 60)
             {
                 EndGameDueToMoney(currentPlayerIndex, (Monopoly)Application.OpenForms["Monopoly"]);
                 return;
@@ -201,10 +187,6 @@ namespace MyMonopol
             MessageBox.Show($"Player {currentPlayerIndex + 1} has run out of money.Game Over!");
 
             form.Close(); // Close the form
-        }
-        public void PurchaseTheCity(int currentPlayerIndex, Player player)
-        {
-
         }
         //    to check all functions to be private/public
         private bool CheckIfCityOwnedByItsOwner(Tile tile)
@@ -300,19 +282,19 @@ namespace MyMonopol
                 string playerName = players[i].GetPlayerName().ToString();
                 e.Graphics.DrawString($"Player {i + 1} Name: ", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY);
                 e.Graphics.DrawString(playerName, font, brush, playerInfoX + 10, playerInfoY + offsetY + 20);
-
                 offsetY += 35;
+
                 //DRAW AMOUNT OF PLAYERS PUNISHMENT
                 int punishmentPlayer = players[i].GetPunishment();
                 e.Graphics.DrawString($"Player {i + 1} Amount Of Punishment: ", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY);
                 e.Graphics.DrawString(punishmentPlayer.ToString(), font, brush, playerInfoX + 10, playerInfoY + offsetY + 20);
+
                 // Draw player money amount
                 double playerMoney = players[i].GetAmountOfMoney();
                 e.Graphics.DrawString($"Player {i + 1} Money:", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY + 50);
                 e.Graphics.DrawString(playerMoney.ToString(), font, brush, playerInfoX + 10, playerInfoY + offsetY + 70);
 
                 //     Draw owned cities
-
                 Tile[] OwnedCities = players[i].GetOwnedCityPlayer();
                 e.Graphics.DrawString($"Player {i + 1} Owned Cities:", boldFont, Brushes.DarkRed, playerInfoX + 10, playerInfoY + offsetY + 100);
                 for (int j = 0; j < OwnedCities.Length; j++)
@@ -320,23 +302,14 @@ namespace MyMonopol
                     if (OwnedCities[j] != null)
                     {
 
-                        e.Graphics.DrawString(OwnedCities[j].getName(), font, brush, playerInfoX + 10, playerInfoY + offsetY + 120);
-                        offsetY += 20;
+                        e.Graphics.DrawString(OwnedCities[j].GetName(), font, brush, playerInfoX + 10, playerInfoY + offsetY + 120);
+                        offsetY += 20;  // Increase the offset for the next city
                     }
-                    // Increase the offset for the next city
                 }
 
 
                 offsetY += 130; // Increase the offset for the next player
             }
-            //if (currentPlayerIndex == 2)
-            //{
-            //    currentPlayerIndex = 0;
-            //}
-            //currentPlayerIndex = currentPlayerIndex + 1;
-            //currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
-
-            //return currentPlayerIndex;
         }
     }
 

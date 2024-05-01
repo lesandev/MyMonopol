@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace MyMonopol
+namespace MyMonopoly
 {
     public class Player
     {
@@ -17,7 +17,7 @@ namespace MyMonopol
         private int playerLandedIndex = 0;
         private int gameAmountOfOwnedCities = 0;
         private int punishment;
-        public Point Position { get; set; }
+        private Point Position;
 
         public Player(Point position, int playerName, int playerLandedIndex)
         {
@@ -25,10 +25,15 @@ namespace MyMonopol
             this.playerName = playerName;
             this.playerLandedIndex = playerLandedIndex;
             punishment = 0;
-            //    ownedCity = new string[0];
         }
-
-
+        public Point GetPosition()
+        {
+            return Position;
+        }
+        public void SetPosition(Point newPosition)
+        {
+            Position = newPosition;
+        }
         public Player(int playerName)
         {
             this.playerName = playerName;

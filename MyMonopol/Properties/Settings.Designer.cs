@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MyMonopol.Properties
+namespace MyMonopoly.Properties
 {
 
 

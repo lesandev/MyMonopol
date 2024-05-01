@@ -1,4 +1,4 @@
-﻿namespace MyMonopol
+﻿namespace MyMonopoly
 {
     public class Graphichs
     {

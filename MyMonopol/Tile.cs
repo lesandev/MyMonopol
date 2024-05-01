@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyMonopol
+namespace MyMonopoly
 {
     public class Tile
     {
@@ -15,34 +15,24 @@ namespace MyMonopol
 
         public string Name() { return name; }
 
-        public Tile() 
+        public Tile() // DEFAULT VALUE CONSTRUCTOR
         {
-            name = "just an abanded city";
+            name = "just an abended city";
             price = 30;
             placeIndex = 0;
-
         }
 
-        public Tile(string name, int price, int placeIndex)
+        public Tile(string name, int price, int placeIndex)// CONSTRUCTOR WITH INDEX
         {
             this.name = name;
             this.price = price;
             this.placeIndex = placeIndex;
-
         }
-
-        public Tile(string name, double price)
-        {
-            this.name = name;
-            this.price = price;
-        }
-
-
-        public double GetPrice()
+        public double GetPrice()// GET PRICE OF PLACE
         {
             return price;
         }
-        public string getName()
+        public string GetName()//GET NAME OF
         {
             return name;
         }
@@ -50,28 +40,19 @@ namespace MyMonopol
 
         public Tile FindTileByIndex(int index)
         {
+            Board board = new Board();
             for (int row = 0; row < 10; row++)
             {
                 for (int col = 0; col < 10; col++)
                 {
-                    if (Board.tiles[row, col].placeIndex == index)
+                    if (board.tiles[row, col].placeIndex == index)
                     {
-                        return Board.tiles[row, col];
+                        return board.tiles[row, col];
                     }
                 }
             }
 
             return null;
         }
-
-        //internal string GetName()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public override string ToString()
-        //{
-        //    return base.ToString();
-        //}
     }
 }
